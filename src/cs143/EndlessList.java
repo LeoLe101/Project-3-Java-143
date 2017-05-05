@@ -1,20 +1,22 @@
 package cs143;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
  * This data class represents an ordered collection in an endless circular list.
  *
  * @param <E> the type of values stored in the list
+ * @author Phuc Hong Le
  * @author
  * @author
  * @author
- * @author
+ * @version 5/5/2017
  */
 public class EndlessList<E> implements Iterable<E> {
 
     //fields
-    private Node cursor;
+    private Node cursor; //this is the current Node
 
     /**
      * Adds a value before the current one and moves the cursor to the new
@@ -24,7 +26,21 @@ public class EndlessList<E> implements Iterable<E> {
      * @param value the value to add to the list
      */
     public void addPrev(E value) {
-        // TODO write method body //
+        //current Node
+        Node current = cursor; //NEEDED?
+        Node newNode = new Node(value);
+
+        if (cursor != null) {
+            Node prevNode = current.getPrev(); //NEEDED?
+            current.setPrev(newNode);
+            if (prevNode != null) {
+                prevNode.setNext(newNode);
+            }
+            cursor = cursor.getNext();
+        }
+        if (cursor == null) {
+            cursor = current;
+        }
     }
 
     /**
@@ -35,7 +51,20 @@ public class EndlessList<E> implements Iterable<E> {
      * @param value the value to add to the list
      */
     public void addNext(E value) {
-        // TODO write method body //
+        //current Node
+        Node current = cursor; //NEEDED?
+        Node newNode = new Node(value);
+        if (cursor != null) {
+            Node nextNode = current.getNext(); //NEEDED?
+            current.setPrev(newNode);
+            if (nextNode != null) {
+                nextNode.setPrev(newNode);
+            }
+            cursor = cursor.getNext();
+            if (cursor == null) {
+                cursor = current;
+            }
+        }
     }
 
     /**
@@ -57,7 +86,11 @@ public class EndlessList<E> implements Iterable<E> {
      * @return the value
      */
     public E getValue() {
-        // TODO write method body //
+        //condition to check if the list is empty or not
+        if (cursor.getValue() != null
+                || cursor.getNext() != null || cursor.getPrev() != null) {
+            return (E) cursor.getValue();
+        }
         return null;
     }
 
@@ -69,8 +102,14 @@ public class EndlessList<E> implements Iterable<E> {
      * @return true if successful, false if not
      */
     public boolean setValue(E value) {
-        // TODO write method body //
-        return false;
+        boolean done = false;
+        //condition to check if the list is empty or not
+        if (cursor.getValue() != null
+                || cursor.getNext() != null || cursor.getPrev() != null) {
+            cursor.setValue(value);
+            done = true;
+        }
+        return done;
     }
 
     /**
@@ -80,7 +119,12 @@ public class EndlessList<E> implements Iterable<E> {
      * @return the value
      */
     public E getPrev() {
-        // TODO write method body //
+        //condition to check if the list is empty or not
+        if (cursor.getValue() != null
+                || cursor.getNext() != null || cursor.getPrev() != null) {
+            cursor.getPrev();
+            return (E) cursor.getValue();
+        }
         return null;
     }
 
@@ -91,7 +135,12 @@ public class EndlessList<E> implements Iterable<E> {
      * @return the value
      */
     public E getNext() {
-        // TODO write method body //
+        //condition to check if the list is empty or not
+        if (cursor.getValue() != null
+                || cursor.getNext() != null || cursor.getPrev() != null) {
+            cursor.getNext();
+            return (E) cursor.getValue();
+        }
         return null;
     }
 
