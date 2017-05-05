@@ -2,6 +2,7 @@ package cs143;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This data class represents an ordered collection in an endless circular list.
@@ -38,8 +39,11 @@ public class EndlessList<E> implements Iterable<E> {
             }
             cursor = cursor.getNext();
         }
-        if (cursor == null) {
-            cursor = current;
+        if (cursor.getValue() == null && cursor.getNext() == null && 
+                cursor.getPrev() == null) {
+            cursor.setValue(value);
+            cursor.setNext(current);
+            cursor.setPrev(current); 
         }
     }
 
@@ -75,8 +79,11 @@ public class EndlessList<E> implements Iterable<E> {
      * @return the value removed
      */
     public E remove() {
-        // TODO write method body //
-        return null;
+        E removedNode = (E) cursor.getValue();
+        Node prevNode = cursor.getPrev();
+        
+        
+        return removedNode;
     }
 
     /**
