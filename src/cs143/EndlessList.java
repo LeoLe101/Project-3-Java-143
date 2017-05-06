@@ -27,23 +27,20 @@ public class EndlessList<E> implements Iterable<E> {
      * @param value the value to add to the list
      */
     public void addPrev(E value) {
-        //current Node
-        Node current = cursor; //NEEDED?
+        //current Node  
         Node newNode = new Node(value);
-
         if (cursor != null) {
-            Node prevNode = current.getPrev(); //NEEDED?
-            current.setPrev(newNode);
+            Node prevNode = cursor.getPrev(); //NEEDED?
+            cursor.setPrev(newNode);
             if (prevNode != null) {
                 prevNode.setNext(newNode);
             }
             cursor = cursor.getNext();
         }
-        if (cursor.getValue() == null && cursor.getNext() == null && 
-                cursor.getPrev() == null) {
+        if (cursor == null) {
             cursor.setValue(value);
-            cursor.setNext(current);
-            cursor.setPrev(current); 
+            cursor.setNext(cursor);
+            cursor.setPrev(cursor); 
         }
     }
 
