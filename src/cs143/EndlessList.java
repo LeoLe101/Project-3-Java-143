@@ -115,10 +115,24 @@ public class EndlessList<E> implements Iterable<E> {
      * @return the value removed
      */
     public E remove() {
-        E removedNode = (E) cursor.getValue();
+        E removedValue = (E) cursor.getValue();
+        //case for empty list
+        if (cursor == null) {
+            return null;
+        }
+        //case for the last value in the list
+        if (cursor.getValue() != null && cursor.getNext() == null && 
+                cursor.getNext() == null) {
+            cursor = null;
+            return removedValue;
+        }
+        //normal case
         Node prevNode = cursor.getPrev();
-
-        return removedNode;
+        Node nextNode = cursor.getNext();
+        prevNode.setNext(nextNode.getPrev());
+        nextNode.setPrev(prevNode.getNext());
+        cursor = cursor.getNext();
+        return removedValue;
     }
 
     /**
@@ -129,8 +143,7 @@ public class EndlessList<E> implements Iterable<E> {
      */
     public E getValue() {
         //condition to check if the list is empty or not
-        if (cursor.getValue() != null
-                || cursor.getNext() != null || cursor.getPrev() != null) {
+        if (cursor != null) {
             return (E) cursor.getValue();
         }
         return null;
@@ -146,8 +159,7 @@ public class EndlessList<E> implements Iterable<E> {
     public boolean setValue(E value) {
         boolean done = false;
         //condition to check if the list is empty or not
-        if (cursor.getValue() != null
-                || cursor.getNext() != null || cursor.getPrev() != null) {
+        if (cursor != null) {
             cursor.setValue(value);
             done = true;
         }
@@ -162,9 +174,8 @@ public class EndlessList<E> implements Iterable<E> {
      */
     public E getPrev() {
         //condition to check if the list is empty or not
-        if (cursor.getValue() != null
-                || cursor.getNext() != null || cursor.getPrev() != null) {
-            cursor.getPrev();
+        if (cursor != null) {
+            cursor = cursor.getPrev();
             return (E) cursor.getValue();
         }
         return null;
@@ -178,9 +189,8 @@ public class EndlessList<E> implements Iterable<E> {
      */
     public E getNext() {
         //condition to check if the list is empty or not
-        if (cursor.getValue() != null
-                || cursor.getNext() != null || cursor.getPrev() != null) {
-            cursor.getNext();
+        if (cursor != null) {
+            cursor = cursor.getNext();
             return (E) cursor.getValue();
         }
         return null;
@@ -195,7 +205,9 @@ public class EndlessList<E> implements Iterable<E> {
      * @return true if the value is found, false if not
      */
     public boolean moveToNext(E value) {
-        // TODO write method body //
+        while(cursor.getValue() != value) {
+            cursor = cursor.getNext();
+        }
         return false;
     }
 
