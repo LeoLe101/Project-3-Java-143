@@ -27,20 +27,40 @@ public class EndlessList<E> implements Iterable<E> {
      * @param value the value to add to the list
      */
     public void addPrev(E value) {
-        //current Node  
+        //set the value as newNode
         Node newNode = new Node(value);
-        if (cursor != null) {
-            Node prevNode = cursor.getPrev(); //NEEDED?
-            cursor.setPrev(newNode);
-            if (prevNode != null) {
-                prevNode.setNext(newNode);
-            }
-            cursor = cursor.getNext();
-        }
+        //cursor Node is the first Node in the list
         if (cursor == null) {
             cursor.setValue(value);
             cursor.setNext(cursor);
-            cursor.setPrev(cursor); 
+            cursor.setPrev(cursor);
+            return;
+        }
+        //previous Node of the cursor is null 
+        if (cursor.getPrev() == null) {
+            //connecting newNode with cursor
+            newNode.setNext(cursor.getPrev()); 
+            cursor.setPrev(newNode.getNext());
+            //move to next Node if it is not null
+            if (cursor.getNext() != null) {
+                cursor = cursor.getNext();
+            }
+            return;
+        }
+        //previous Node of the cursor has a value
+        if (cursor.getPrev() != null) {
+            Node prevNode = cursor.getPrev();
+            //connecting newNode with cursor
+            cursor.setPrev(newNode.getNext());
+            newNode.setNext(cursor.getPrev());
+            //connecting newNode with prevNode
+            prevNode.setNext(newNode.getPrev());
+            newNode.setPrev(prevNode.getNext());
+            //move to next Node if it is not null
+            if (cursor.getNext() != null) {
+                cursor = cursor.getNext();
+            }
+            return;
         }
     }
 
@@ -78,8 +98,7 @@ public class EndlessList<E> implements Iterable<E> {
     public E remove() {
         E removedNode = (E) cursor.getValue();
         Node prevNode = cursor.getPrev();
-        
-        
+
         return removedNode;
     }
 
