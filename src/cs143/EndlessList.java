@@ -39,7 +39,7 @@ public class EndlessList<E> implements Iterable<E> {
         //previous Node of the cursor is null 
         if (cursor.getPrev() == null) {
             //connecting newNode with cursor
-            newNode.setNext(cursor.getPrev()); 
+            newNode.setNext(cursor.getPrev());
             cursor.setPrev(newNode.getNext());
             //move to next Node if it is not null
             if (cursor.getNext() != null) {
@@ -60,7 +60,6 @@ public class EndlessList<E> implements Iterable<E> {
             if (cursor.getNext() != null) {
                 cursor = cursor.getNext();
             }
-            return;
         }
     }
 
@@ -72,18 +71,38 @@ public class EndlessList<E> implements Iterable<E> {
      * @param value the value to add to the list
      */
     public void addNext(E value) {
-        //current Node
-        Node current = cursor; //NEEDED?
+        //set the value as newNode
         Node newNode = new Node(value);
-        if (cursor != null) {
-            Node nextNode = current.getNext(); //NEEDED?
-            current.setPrev(newNode);
-            if (nextNode != null) {
-                nextNode.setPrev(newNode);
+        //cursor Node is the first Node in the list
+        if (cursor == null) {
+            cursor.setValue(value);
+            cursor.setNext(cursor);
+            cursor.setPrev(cursor);
+            return;
+        }
+        //next Node of the cursor is null 
+        if (cursor.getNext() == null) {
+            //connecting newNode with cursor
+            newNode.setPrev(cursor.getNext());
+            cursor.setNext(newNode.getPrev());
+            //move to next Node if it is not null
+            if (cursor.getNext() != null) {
+                cursor = cursor.getNext();
             }
-            cursor = cursor.getNext();
-            if (cursor == null) {
-                cursor = current;
+            return;
+        }
+        //next Node of the cursor has a value
+        if (cursor.getNext() != null) {
+            Node nextNode = cursor.getNext();
+            //connecting newNode with cursor
+            cursor.setNext(newNode.getPrev());
+            newNode.setPrev(cursor.getNext());
+            //connecting newNode with nextNode
+            nextNode.setPrev(newNode.getNext());
+            newNode.setNext(nextNode.getPrev());
+            //move to next Node if it is not null
+            if (cursor.getNext() != null) {
+                cursor = cursor.getNext();
             }
         }
     }
