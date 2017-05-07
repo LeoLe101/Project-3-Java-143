@@ -121,8 +121,8 @@ public class EndlessList<E> implements Iterable<E> {
             return null;
         }
         //case for the last value in the list
-        if (cursor.getValue() != null && cursor.getNext() == null && 
-                cursor.getNext() == null) {
+        if (cursor.getValue() != null && cursor.getNext() == null
+                && cursor.getNext() == null) {
             cursor = null;
             return removedValue;
         }
@@ -205,10 +205,20 @@ public class EndlessList<E> implements Iterable<E> {
      * @return true if the value is found, false if not
      */
     public boolean moveToNext(E value) {
-        while(cursor.getValue() != value) {
-            cursor = cursor.getNext();
+        boolean done = false;
+        Node currentNode = cursor;
+        while (!done) {
+            if (cursor.getValue() != value) {
+                cursor = cursor.getNext();
+            }
+            if (cursor.getValue() == value) {
+                done = true;
+            }
+            if (cursor == currentNode) {
+                break;
+            }
         }
-        return false;
+        return done;
     }
 
     /**
@@ -220,8 +230,20 @@ public class EndlessList<E> implements Iterable<E> {
      * @return true if the value is found, false if not
      */
     public boolean moveToPrev(E value) {
-        // TODO write method body //
-        return false;
+        boolean done = false;
+        Node currentNode = cursor;
+        while (!done) {
+            if (cursor.getValue() != value) {
+                cursor = cursor.getPrev();
+            }
+            if (cursor.getValue() == value) {
+                done = true;
+            }
+            if (cursor == currentNode) {
+                break;
+            }
+        }
+        return done;
     }
 
     /**
@@ -252,8 +274,17 @@ public class EndlessList<E> implements Iterable<E> {
          */
         @Override
         public boolean hasNext() {
-            // TODO write method body //
-            return false;
+            //case that Node has yet been reported
+            if (START.getValue() != next() ) {
+                handledStart = true;
+                return handledStart;
+            }
+            //case the list is empty
+            if (START == null) {
+                return handledStart;
+            }
+            //case that it has been reported
+            return handledStart;
         }
 
         /**
@@ -263,8 +294,9 @@ public class EndlessList<E> implements Iterable<E> {
          */
         @Override
         public E next() {
-            // TODO write method body //
-            return null;
+            Node currentNode = START;
+            Node nextNode = START.getNext();
+            return (E) currentNode.getValue();
         }
 
         /**
@@ -274,7 +306,9 @@ public class EndlessList<E> implements Iterable<E> {
          */
         @Override
         public void remove() {
-            // TODO write method body //
+            if (next() == START.getValue() && START.getNext() == null) {
+                
+            }
         }
 
     }
