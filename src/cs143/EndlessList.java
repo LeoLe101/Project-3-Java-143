@@ -20,6 +20,21 @@ public class EndlessList<E> implements Iterable<E> {
     private Node cursor; //this is the current Node
 
     /**
+     * default constructor
+     */
+    public EndlessList() {
+    }
+
+    /**
+     * Constructor with first node
+     * 
+     * @param first 
+     */
+    public EndlessList(Node first) {
+        this.cursor = first;
+    }
+    
+    /**
      * Adds a value before the current one and moves the cursor to the new
      * value. If the list is empty the value is simply added and becomes the
      * current one.

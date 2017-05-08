@@ -1,17 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EndlessList.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Project3Complete&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">cs143</a> &gt; <span class="el_source">EndlessList.java</span></div><h1>EndlessList.java</h1><pre class="source lang-java linenums">package cs143;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EndlessList.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;Project3&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">cs143</a> &gt; <span class="el_source">EndlessList.java</span></div><h1>EndlessList.java</h1><pre class="source lang-java linenums">package cs143;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This data class represents an ordered collection in an endless circular list.
  *
  * @param &lt;E&gt; the type of values stored in the list
- * @author Linda Zuvich
+ * @author Phuc Hong Le
+ * @author
+ * @author
+ * @author
+ * @version 5/5/2017
  */
-<span class="fc" id="L11">public class EndlessList&lt;E&gt; implements Iterable&lt;E&gt; {</span>
+<span class="fc" id="L17">public class EndlessList&lt;E&gt; implements Iterable&lt;E&gt; {</span>
 
     //fields
-    private Node cursor;
+    private Node cursor; //this is the current Node
 
     /**
      * Adds a value before the current one and moves the cursor to the new
@@ -21,18 +27,41 @@ import java.util.Iterator;
      * @param value the value to add to the list
      */
     public void addPrev(E value) {
-<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L25">            Node node = new Node(value);</span>
-<span class="fc" id="L26">            node.setNext(node);</span>
-<span class="fc" id="L27">            node.setPrev(node);</span>
-<span class="fc" id="L28">            cursor = node;</span>
-<span class="fc" id="L29">        } else {</span>
-<span class="fc" id="L30">            Node node = new Node(value, cursor.getPrev(), cursor);</span>
-<span class="fc" id="L31">            cursor.getPrev().setNext(node);</span>
-<span class="fc" id="L32">            cursor.setPrev(node);</span>
-<span class="fc" id="L33">            cursor = node;</span>
+        //set the value as newNode
+<span class="fc" id="L31">        Node newNode = new Node(value);</span>
+        //cursor Node is the first Node in the list
+<span class="pc bpc" id="L33" title="1 of 2 branches missed.">        if (cursor == null) {</span>
+<span class="nc" id="L34">            cursor.setValue(value);</span>
+<span class="nc" id="L35">            cursor.setNext(cursor);</span>
+<span class="nc" id="L36">            cursor.setPrev(cursor);</span>
+<span class="nc" id="L37">            return;</span>
         }
-<span class="fc" id="L35">    }</span>
+        //previous Node of the cursor is null 
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (cursor.getPrev() == null) {</span>
+            //connecting newNode with cursor
+<span class="nc" id="L42">            newNode.setNext(cursor.getPrev());</span>
+<span class="nc" id="L43">            cursor.setPrev(newNode.getNext());</span>
+            //move to next Node if it is not null
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            if (cursor.getNext() != null) {</span>
+<span class="nc" id="L46">                cursor = cursor.getNext();</span>
+            }
+<span class="nc" id="L48">            return;</span>
+        }
+        //previous Node of the cursor has a value
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (cursor.getPrev() != null) {</span>
+<span class="nc" id="L52">            Node prevNode = cursor.getPrev();</span>
+            //connecting newNode with cursor
+<span class="nc" id="L54">            cursor.setPrev(newNode.getNext());</span>
+<span class="nc" id="L55">            newNode.setNext(cursor.getPrev());</span>
+            //connecting newNode with prevNode
+<span class="nc" id="L57">            prevNode.setNext(newNode.getPrev());</span>
+<span class="nc" id="L58">            newNode.setPrev(prevNode.getNext());</span>
+            //move to next Node if it is not null
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            if (cursor.getNext() != null) {</span>
+<span class="nc" id="L61">                cursor = cursor.getNext();</span>
+            }
+        }
+<span class="nc" id="L64">    }</span>
 
     /**
      * Adds a value after the current one and moves the cursor to the new value.
@@ -42,18 +71,41 @@ import java.util.Iterator;
      * @param value the value to add to the list
      */
     public void addNext(E value) {
-<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L46">            Node node = new Node(value);</span>
-<span class="fc" id="L47">            node.setNext(node);</span>
-<span class="fc" id="L48">            node.setPrev(node);</span>
-<span class="fc" id="L49">            cursor = node;</span>
-<span class="fc" id="L50">        } else {</span>
-<span class="fc" id="L51">            Node node = new Node(value, cursor, cursor.getNext());</span>
-<span class="fc" id="L52">            cursor.getNext().setPrev(node);</span>
-<span class="fc" id="L53">            cursor.setNext(node);</span>
-<span class="fc" id="L54">            cursor = node;</span>
+        //set the value as newNode
+<span class="nc" id="L75">        Node newNode = new Node(value);</span>
+        //cursor Node is the first Node in the list
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (cursor == null) {</span>
+<span class="nc" id="L78">            cursor.setValue(value);</span>
+<span class="nc" id="L79">            cursor.setNext(cursor);</span>
+<span class="nc" id="L80">            cursor.setPrev(cursor);</span>
+<span class="nc" id="L81">            return;</span>
         }
-<span class="fc" id="L56">    }</span>
+        //next Node of the cursor is null 
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if (cursor.getNext() == null) {</span>
+            //connecting newNode with cursor
+<span class="nc" id="L86">            newNode.setPrev(cursor.getNext());</span>
+<span class="nc" id="L87">            cursor.setNext(newNode.getPrev());</span>
+            //move to next Node if it is not null
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            if (cursor.getNext() != null) {</span>
+<span class="nc" id="L90">                cursor = cursor.getNext();</span>
+            }
+<span class="nc" id="L92">            return;</span>
+        }
+        //next Node of the cursor has a value
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (cursor.getNext() != null) {</span>
+<span class="nc" id="L96">            Node nextNode = cursor.getNext();</span>
+            //connecting newNode with cursor
+<span class="nc" id="L98">            cursor.setNext(newNode.getPrev());</span>
+<span class="nc" id="L99">            newNode.setPrev(cursor.getNext());</span>
+            //connecting newNode with nextNode
+<span class="nc" id="L101">            nextNode.setPrev(newNode.getNext());</span>
+<span class="nc" id="L102">            newNode.setNext(nextNode.getPrev());</span>
+            //move to next Node if it is not null
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if (cursor.getNext() != null) {</span>
+<span class="nc" id="L105">                cursor = cursor.getNext();</span>
+            }
+        }
+<span class="nc" id="L108">    }</span>
 
     /**
      * Removes the current value from the list and moves the cursor to the next
@@ -63,21 +115,24 @@ import java.util.Iterator;
      * @return the value removed
      */
     public E remove() {
-<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L67">            return null;</span>
+<span class="nc" id="L118">        E removedValue = (E) cursor.getValue();</span>
+        //case for empty list
+<span class="nc bnc" id="L120" title="All 2 branches missed.">        if (cursor == null) {</span>
+<span class="nc" id="L121">            return null;</span>
         }
-<span class="fc" id="L69">        Node curr = cursor;</span>
-<span class="fc" id="L70">        Node prev = cursor.getPrev();</span>
-<span class="fc" id="L71">        Node next = cursor.getNext();</span>
-<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (curr == prev) {</span>
-<span class="fc" id="L73">            cursor = null;</span>
-<span class="fc" id="L74">            return (E) curr.getValue();</span>
-        } else {
-<span class="fc" id="L76">            prev.setNext(next);</span>
-<span class="fc" id="L77">            next.setPrev(prev);</span>
-<span class="fc" id="L78">            cursor = next;</span>
-<span class="fc" id="L79">            return (E) curr.getValue();</span>
+        //case for the last value in the list
+<span class="nc bnc" id="L124" title="All 4 branches missed.">        if (cursor.getValue() != null &amp;&amp; cursor.getNext() == null</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                &amp;&amp; cursor.getNext() == null) {</span>
+<span class="nc" id="L126">            cursor = null;</span>
+<span class="nc" id="L127">            return removedValue;</span>
         }
+        //normal case
+<span class="nc" id="L130">        Node prevNode = cursor.getPrev();</span>
+<span class="nc" id="L131">        Node nextNode = cursor.getNext();</span>
+<span class="nc" id="L132">        prevNode.setNext(nextNode.getPrev());</span>
+<span class="nc" id="L133">        nextNode.setPrev(prevNode.getNext());</span>
+<span class="nc" id="L134">        cursor = cursor.getNext();</span>
+<span class="nc" id="L135">        return removedValue;</span>
     }
 
     /**
@@ -87,25 +142,28 @@ import java.util.Iterator;
      * @return the value
      */
     public E getValue() {
-<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L91">            return null;</span>
+        //condition to check if the list is empty or not
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (cursor != null) {</span>
+<span class="nc" id="L147">            return (E) cursor.getValue();</span>
         }
-<span class="fc" id="L93">        return (E) cursor.getValue();</span>
+<span class="nc" id="L149">        return null;</span>
     }
-    
+
     /**
-     * Changes the current value at the current cursor position. Returns
-     * false if the list is empty and true if the change is made.
-     * 
+     * Changes the current value at the current cursor position. Returns false
+     * if the list is empty and true if the change is made.
+     *
      * @param value the new value
      * @return true if successful, false if not
      */
     public boolean setValue(E value) {
-<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L105">            return false;</span>
+<span class="nc" id="L160">        boolean done = false;</span>
+        //condition to check if the list is empty or not
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (cursor != null) {</span>
+<span class="nc" id="L163">            cursor.setValue(value);</span>
+<span class="nc" id="L164">            done = true;</span>
         }
-<span class="fc" id="L107">        cursor.setValue(value);</span>
-<span class="fc" id="L108">        return true;</span>
+<span class="nc" id="L166">        return done;</span>
     }
 
     /**
@@ -115,11 +173,12 @@ import java.util.Iterator;
      * @return the value
      */
     public E getPrev() {
-<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L119">            return null;</span>
+        //condition to check if the list is empty or not
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        if (cursor != null) {</span>
+<span class="nc" id="L178">            cursor = cursor.getPrev();</span>
+<span class="nc" id="L179">            return (E) cursor.getValue();</span>
         }
-<span class="fc" id="L121">        cursor = cursor.getPrev();</span>
-<span class="fc" id="L122">        return (E) cursor.getValue();</span>
+<span class="nc" id="L181">        return null;</span>
     }
 
     /**
@@ -129,11 +188,12 @@ import java.util.Iterator;
      * @return the value
      */
     public E getNext() {
-<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L133">            return null;</span>
+        //condition to check if the list is empty or not
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (cursor != null) {</span>
+<span class="nc" id="L193">            cursor = cursor.getNext();</span>
+<span class="nc" id="L194">            return (E) cursor.getValue();</span>
         }
-<span class="fc" id="L135">        cursor = cursor.getNext();</span>
-<span class="fc" id="L136">        return (E) cursor.getValue();</span>
+<span class="nc" id="L196">        return null;</span>
     }
 
     /**
@@ -145,20 +205,20 @@ import java.util.Iterator;
      * @return true if the value is found, false if not
      */
     public boolean moveToNext(E value) {
-<span class="fc bfc" id="L148" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L149">            return false;</span>
-        }
-<span class="fc" id="L151">        Node curr = cursor;</span>
-<span class="fc" id="L152">        cursor = cursor.getNext();</span>
-<span class="fc" id="L153">        boolean found = false;</span>
-<span class="fc bfc" id="L154" title="All 4 branches covered.">        while (cursor != curr &amp;&amp; !found) {</span>
-<span class="fc bfc" id="L155" title="All 2 branches covered.">            if (cursor.getValue().equals(value)) {</span>
-<span class="fc" id="L156">                found = true;</span>
-            } else {
-<span class="fc" id="L158">                cursor = cursor.getNext();</span>
+<span class="nc" id="L208">        boolean done = false;</span>
+<span class="nc" id="L209">        Node currentNode = cursor;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        while (!done) {</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">            if (cursor.getValue() != value) {</span>
+<span class="nc" id="L212">                cursor = cursor.getNext();</span>
+            }
+<span class="nc bnc" id="L214" title="All 2 branches missed.">            if (cursor.getValue() == value) {</span>
+<span class="nc" id="L215">                done = true;</span>
+            }
+<span class="nc bnc" id="L217" title="All 2 branches missed.">            if (cursor == currentNode) {</span>
+<span class="nc" id="L218">                break;</span>
             }
         }
-<span class="fc" id="L161">        return found;</span>
+<span class="nc" id="L221">        return done;</span>
     }
 
     /**
@@ -170,20 +230,20 @@ import java.util.Iterator;
      * @return true if the value is found, false if not
      */
     public boolean moveToPrev(E value) {
-<span class="fc bfc" id="L173" title="All 2 branches covered.">        if (cursor == null) {</span>
-<span class="fc" id="L174">            return false;</span>
-        }
-<span class="fc" id="L176">        Node curr = cursor;</span>
-<span class="fc" id="L177">        cursor = cursor.getPrev();</span>
-<span class="fc" id="L178">        boolean found = false;</span>
-<span class="fc bfc" id="L179" title="All 4 branches covered.">        while (cursor != curr &amp;&amp; !found) {</span>
-<span class="fc bfc" id="L180" title="All 2 branches covered.">            if (cursor.getValue().equals(value)) {</span>
-<span class="fc" id="L181">                found = true;</span>
-            } else {
-<span class="fc" id="L183">                cursor = cursor.getPrev();</span>
+<span class="nc" id="L233">        boolean done = false;</span>
+<span class="nc" id="L234">        Node currentNode = cursor;</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        while (!done) {</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            if (cursor.getValue() != value) {</span>
+<span class="nc" id="L237">                cursor = cursor.getPrev();</span>
+            }
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            if (cursor.getValue() == value) {</span>
+<span class="nc" id="L240">                done = true;</span>
+            }
+<span class="nc bnc" id="L242" title="All 2 branches missed.">            if (cursor == currentNode) {</span>
+<span class="nc" id="L243">                break;</span>
             }
         }
-<span class="fc" id="L186">        return found;</span>
+<span class="nc" id="L246">        return done;</span>
     }
 
     /**
@@ -193,31 +253,38 @@ import java.util.Iterator;
      */
     @Override
     public Iterator&lt;E&gt; iterator() {
-<span class="fc" id="L196">        return new EndlessListIterator();</span>
+<span class="nc" id="L256">        return new EndlessListIterator();</span>
     }
 
     /**
      * Private class used to create an EndlessList iterator.
      */
-<span class="fc" id="L202">    private class EndlessListIterator implements Iterator&lt;E&gt; {</span>
+<span class="nc" id="L262">    private class EndlessListIterator implements Iterator&lt;E&gt; {</span>
 
         //fields
-<span class="fc" id="L205">        private final Node START = cursor;</span>
-<span class="fc" id="L206">        private boolean handledStart = false;</span>
+<span class="nc" id="L265">        private final Node START = cursor;</span>
+<span class="nc" id="L266">        private boolean handledStart = false;</span>
 
         /**
          * Reports if the current node has not been reported yet by calling
          * next(). Returns false if the list is empty.
          *
-         * @return true if the current node has not been reported, false
-         * if it has
+         * @return true if the current node has not been reported, false if it
+         * has
          */
         @Override
         public boolean hasNext() {
-<span class="fc bfc" id="L217" title="All 2 branches covered.">            if (cursor == null) {</span>
-<span class="fc" id="L218">                return false;</span>
+            //case that Node has yet been reported
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (START.getValue() != next() ) {</span>
+<span class="nc" id="L279">                handledStart = true;</span>
+<span class="nc" id="L280">                return handledStart;</span>
             }
-<span class="fc bfc" id="L220" title="All 4 branches covered.">            return handledStart == false || cursor != START;</span>
+            //case the list is empty
+<span class="nc bnc" id="L283" title="All 2 branches missed.">            if (START == null) {</span>
+<span class="nc" id="L284">                return handledStart;</span>
+            }
+            //case that it has been reported
+<span class="nc" id="L287">            return handledStart;</span>
         }
 
         /**
@@ -227,26 +294,22 @@ import java.util.Iterator;
          */
         @Override
         public E next() {
-<span class="fc bfc" id="L230" title="All 2 branches covered.">            if (cursor == null) {</span>
-<span class="fc" id="L231">                return null;</span>
-            }
-<span class="fc bfc" id="L233" title="All 2 branches covered.">            if (cursor == START) {</span>
-<span class="fc" id="L234">                handledStart = true;</span>
-            }
-<span class="fc" id="L236">            cursor = cursor.getNext();</span>
-<span class="fc" id="L237">            return (E) cursor.getPrev().getValue();</span>
+<span class="nc" id="L297">            Node currentNode = START;</span>
+<span class="nc" id="L298">            Node nextNode = START.getNext();</span>
+<span class="nc" id="L299">            return (E) currentNode.getValue();</span>
         }
 
         /**
-         * Removes the last value returned from next(). This assumes that
-         * next is called before each remove. If this is the only 
-         * value in the list the cursor becomes null.
+         * Removes the last value returned from next(). This assumes that next
+         * is called before each remove. If this is the only value in the list
+         * the cursor becomes null.
          */
         @Override
         public void remove() {
-<span class="fc" id="L247">            cursor = cursor.getPrev();</span>
-<span class="fc" id="L248">            EndlessList.this.remove();</span>
-<span class="fc" id="L249">        }</span>
+<span class="nc bnc" id="L309" title="All 4 branches missed.">            if (next() == START.getValue() &amp;&amp; START.getNext() == null) {</span>
+                
+            }
+<span class="nc" id="L312">        }</span>
 
     }
 
