@@ -21,10 +21,6 @@ public class EndlessListTest {
     @Before
     public void setUp() {
         numList = new EndlessList<>();
-        numList.addPrev(19);
-        numList.addNext(10);
-        numList.addPrev(15);
-        numList.addNext(13);
     }
 
     /**
@@ -32,9 +28,14 @@ public class EndlessListTest {
      */
     @Test
     public void testAddPrev() {
+        //test the first value added
         numList.addPrev(1);
+        assertEquals((Integer)1, numList.getValue());
+        //test the list when adding previous position
         numList.addPrev(2);
-        assertSame(2, numList.getValue());
+        numList.addPrev(7);
+        numList.addPrev(9);
+        assertEquals((Integer)9, numList.getValue());
     }
 
     /**
@@ -42,9 +43,14 @@ public class EndlessListTest {
      */
     @Test
     public void testAddNext() {
+        //test the first value added
         numList.addNext(1);
+        assertEquals((Integer)1, numList.getValue());
+        //test the list when adding next position
         numList.addNext(2);
-        assertSame(2, numList.getValue());
+        numList.addNext(7);
+        numList.addNext(9);
+        assertEquals((Integer)9, numList.getValue());
     }
 
     /**
@@ -52,6 +58,7 @@ public class EndlessListTest {
      */
     @Test
     public void testRemove() {
+        
     }
 
     /**
@@ -105,7 +112,7 @@ public class EndlessListTest {
      */
     @Test
     public void testMoveToNext() {
-        assertSame(true, numList.moveToNext(15));
+        assertSame(false, numList.moveToNext(1));
         assertSame(false, numList.moveToPrev(99));
     }
 

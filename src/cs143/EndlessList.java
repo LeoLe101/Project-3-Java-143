@@ -26,15 +26,6 @@ public class EndlessList<E> implements Iterable<E> {
     }
 
     /**
-     * Constructor with first node
-     * 
-     * @param first 
-     */
-    public EndlessList(Node first) {
-        this.cursor = first;
-    }
-    
-    /**
      * Adds a value before the current one and moves the cursor to the new
      * value. If the list is empty the value is simply added and becomes the
      * current one.
@@ -46,36 +37,22 @@ public class EndlessList<E> implements Iterable<E> {
         Node newNode = new Node(value);
         //cursor Node is the first Node in the list
         if (cursor == null) {
-            cursor.setValue(value);
+            cursor = newNode;
             cursor.setNext(cursor);
             cursor.setPrev(cursor);
             return;
         }
-        //previous Node of the cursor is null 
-        if (cursor.getPrev() == null) {
-            //connecting newNode with cursor
-            newNode.setNext(cursor.getPrev());
-            cursor.setPrev(newNode.getNext());
-            //move to next Node if it is not null
-            if (cursor.getNext() != null) {
-                cursor = cursor.getNext();
-            }
-            return;
-        }
         //previous Node of the cursor has a value
-        if (cursor.getPrev() != null) {
-            Node prevNode = cursor.getPrev();
-            //connecting newNode with cursor
-            cursor.setPrev(newNode.getNext());
-            newNode.setNext(cursor.getPrev());
-            //connecting newNode with prevNode
-            prevNode.setNext(newNode.getPrev());
-            newNode.setPrev(prevNode.getNext());
-            //move to next Node if it is not null
-            if (cursor.getNext() != null) {
-                cursor = cursor.getNext();
-            }
-        }
+        Node prevNode = cursor.getPrev();
+        //connecting newNode with cursor
+        cursor.setPrev(newNode);
+        newNode.setNext(cursor);
+        //connecting newNode with prevNode
+        prevNode.setNext(newNode);
+        newNode.setPrev(prevNode);
+        //move to the new Node
+        cursor = newNode;
+
     }
 
     /**
@@ -90,36 +67,22 @@ public class EndlessList<E> implements Iterable<E> {
         Node newNode = new Node(value);
         //cursor Node is the first Node in the list
         if (cursor == null) {
-            cursor.setValue(value);
+            cursor = newNode;
             cursor.setNext(cursor);
             cursor.setPrev(cursor);
             return;
         }
-        //next Node of the cursor is null 
-        if (cursor.getNext() == null) {
-            //connecting newNode with cursor
-            newNode.setPrev(cursor.getNext());
-            cursor.setNext(newNode.getPrev());
-            //move to next Node if it is not null
-            if (cursor.getNext() != null) {
-                cursor = cursor.getNext();
-            }
-            return;
-        }
         //next Node of the cursor has a value
-        if (cursor.getNext() != null) {
-            Node nextNode = cursor.getNext();
-            //connecting newNode with cursor
-            cursor.setNext(newNode.getPrev());
-            newNode.setPrev(cursor.getNext());
-            //connecting newNode with nextNode
-            nextNode.setPrev(newNode.getNext());
-            newNode.setNext(nextNode.getPrev());
-            //move to next Node if it is not null
-            if (cursor.getNext() != null) {
-                cursor = cursor.getNext();
-            }
-        }
+        Node nextNode = cursor.getNext();
+        //connecting newNode with cursor
+        cursor.setNext(newNode);
+        newNode.setPrev(cursor);
+        //connecting newNode with nextNode
+        nextNode.setPrev(newNode);
+        newNode.setNext(nextNode);
+        //move to the new Node 
+        cursor = newNode;
+
     }
 
     /**
@@ -135,17 +98,11 @@ public class EndlessList<E> implements Iterable<E> {
         if (cursor == null) {
             return null;
         }
-        //case for the last value in the list
-        if (cursor.getValue() != null && cursor.getNext() == null
-                && cursor.getNext() == null) {
-            cursor = null;
-            return removedValue;
-        }
         //normal case
         Node prevNode = cursor.getPrev();
         Node nextNode = cursor.getNext();
-        prevNode.setNext(nextNode.getPrev());
-        nextNode.setPrev(prevNode.getNext());
+        prevNode.setNext(nextNode);
+        nextNode.setPrev(prevNode);
         cursor = cursor.getNext();
         return removedValue;
     }
@@ -226,10 +183,10 @@ public class EndlessList<E> implements Iterable<E> {
             if (cursor.getValue() != value) {
                 cursor = cursor.getNext();
             }
-            if (cursor.getValue() == value) {
+            if (cursor.getValue().equals(value)) {
                 done = true;
             }
-            if (cursor == currentNode) {
+            if (cursor == currentNode || cursor == null) {
                 break;
             }
         }
@@ -251,7 +208,7 @@ public class EndlessList<E> implements Iterable<E> {
             if (cursor.getValue() != value) {
                 cursor = cursor.getPrev();
             }
-            if (cursor.getValue() == value) {
+            if (cursor.getValue().equals(value)) {
                 done = true;
             }
             if (cursor == currentNode) {
@@ -290,12 +247,12 @@ public class EndlessList<E> implements Iterable<E> {
         @Override
         public boolean hasNext() {
             //case that Node has yet been reported
-            if (START.getValue() != next() ) {
+            if (cursor.getValue() != next() && cursor == START) {
                 handledStart = true;
                 return handledStart;
             }
-            //case the list is empty
-            if (START == null) {
+            //case if the list is empty
+            if (cursor == null) {
                 return handledStart;
             }
             //case that it has been reported
@@ -309,8 +266,12 @@ public class EndlessList<E> implements Iterable<E> {
          */
         @Override
         public E next() {
-            Node currentNode = START;
-            Node nextNode = START.getNext();
+            //case if the list is empty
+            if (cursor == null) {
+                return null;
+            }
+            Node currentNode = cursor;
+            cursor = cursor.getNext();
             return (E) currentNode.getValue();
         }
 
@@ -321,11 +282,15 @@ public class EndlessList<E> implements Iterable<E> {
          */
         @Override
         public void remove() {
-            if (next() == START.getValue() && START.getNext() == null) {
-                
+            //case if the list only has this value
+            if (cursor.getNext() == cursor && cursor.getPrev() == cursor) {
+                cursor = null;
+            } else {
+                Node prev = cursor.getPrev().getPrev();
+                //remove the last returned value from next()
+                prev.setNext(cursor);
+                cursor.setPrev(prev);
             }
         }
-
     }
-
 }
