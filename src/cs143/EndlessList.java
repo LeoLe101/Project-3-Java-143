@@ -82,7 +82,6 @@ public class EndlessList<E> implements Iterable<E> {
         newNode.setNext(nextNode);
         //move to the new Node 
         cursor = newNode;
-
     }
 
     /**
@@ -97,8 +96,13 @@ public class EndlessList<E> implements Iterable<E> {
         if (cursor == null) {
             return null;
         }
-        //normal case
+        //case for the last value in the list
         E removedNode = (E) cursor.getValue();
+        if (cursor.getNext() == cursor && cursor.getPrev() == cursor) {
+            cursor = null;
+            return removedNode;
+        }
+        //normal case
         Node prevNode = cursor.getPrev();
         Node nextNode = cursor.getNext();
         prevNode.setNext(nextNode);
@@ -180,14 +184,12 @@ public class EndlessList<E> implements Iterable<E> {
         boolean done = false;
         Node currentNode = cursor;
         while (!done) {
-            if (cursor.getValue() != value) {
-                cursor = cursor.getNext();
-            }
+            cursor = cursor.getNext();
             if (cursor.getValue().equals(value)) {
                 done = true;
             }
-            if (cursor == currentNode || cursor == null) {
-                break;
+            if (cursor == currentNode) {
+                return done;
             }
         }
         return done;
@@ -205,14 +207,12 @@ public class EndlessList<E> implements Iterable<E> {
         boolean done = false;
         Node currentNode = cursor;
         while (!done) {
-            if (cursor.getValue() != value) {
-                cursor = cursor.getPrev();
-            }
+            cursor = cursor.getPrev();
             if (cursor.getValue().equals(value)) {
                 done = true;
             }
             if (cursor == currentNode) {
-                break;
+                return done;
             }
         }
         return done;
@@ -246,15 +246,16 @@ public class EndlessList<E> implements Iterable<E> {
          */
         @Override
         public boolean hasNext() {
+            //case if the list is empty
+            if (cursor == null) {
+                return handledStart;
+            }
             //case that Node has yet been reported
             if (cursor.getValue() != next() && cursor == START) {
                 handledStart = true;
                 return handledStart;
             }
-            //case if the list is empty
-            if (cursor == null) {
-                return handledStart;
-            }
+
             //case that it has been reported
             return handledStart;
         }

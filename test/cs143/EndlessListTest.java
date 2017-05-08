@@ -1,5 +1,6 @@
 package cs143;
 
+import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -86,10 +87,9 @@ public class EndlessListTest {
         numList.addNext(4);
         assertSame(4, numList.remove());
         //check the current Node
-        assertTrue(numList.getValue() == 1);
+        assertTrue(numList.getValue() == 2);
         //check if removed
         assertFalse(numList.getPrev() == 4);
-
     }
 
     /**
@@ -187,6 +187,7 @@ public class EndlessListTest {
         assertTrue(numList.moveToNext(46));
         assertEquals((Integer) 46, numList.getValue());
         numList.addNext(45);
+        numList.moveToNext(99);
         assertFalse(numList.moveToNext(99));
     }
 
@@ -199,15 +200,16 @@ public class EndlessListTest {
         numList.addNext(5);
         numList.addNext(33);
         //check if 
-        assertTrue(numList.moveToNext(5));
+        assertTrue(numList.moveToPrev(5));
         assertTrue(numList.getValue() == 5);
         assertFalse(numList.getValue() != 5);
         numList.addNext(46);
         numList.addNext(59);
-        assertTrue(numList.moveToNext(46));
+        assertTrue(numList.moveToPrev(46));
         assertEquals((Integer) 46, numList.getValue());
         numList.addNext(45);
-        assertFalse(numList.moveToNext(99));
+        numList.moveToPrev(99);
+        assertFalse(numList.moveToPrev(99));
     }
 
     /**
@@ -215,6 +217,22 @@ public class EndlessListTest {
      */
     @Test
     public void testIterator() {
-
+        Iterator itr = numList.iterator();
+        assertFalse(itr.hasNext());
+        assertNull(itr.next());
+        numList.addNext(34);
+        Iterator itr1 = numList.iterator();
+        assertFalse(itr1.hasNext());
+        itr1.remove();
+        assertTrue(itr1.next() == null);
+        numList.addNext(69);
+        numList.addNext(53);
+        numList.moveToPrev(69);
+        Iterator itr2 = numList.iterator();
+        itr2.next();
+        if (itr2.hasNext()) {
+            itr2.remove();
+        }
+        assertFalse(itr2.hasNext());
     }
 }
