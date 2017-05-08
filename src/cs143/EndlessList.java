@@ -93,18 +93,18 @@ public class EndlessList<E> implements Iterable<E> {
      * @return the value removed
      */
     public E remove() {
-        E removedValue = (E) cursor.getValue();
         //case for empty list
         if (cursor == null) {
             return null;
         }
         //normal case
+        E removedNode = (E) cursor.getValue();
         Node prevNode = cursor.getPrev();
         Node nextNode = cursor.getNext();
         prevNode.setNext(nextNode);
         nextNode.setPrev(prevNode);
-        cursor = cursor.getNext();
-        return removedValue;
+        cursor = nextNode;
+        return removedNode;
     }
 
     /**
