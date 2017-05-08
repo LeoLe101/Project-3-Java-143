@@ -6,23 +6,25 @@ import static org.junit.Assert.*;
 
 /**
  * J-unit for testing the EndlessList methods
- * 
+ *
  * @author Phuc Hong Le
  * @version 5/5/2017
  */
 public class EndlessListTest {
-    
+
     //fields
     EndlessList<Integer> numList;
-    EndlessList<String> strList;
-    
+
     public EndlessListTest() {
     }
-    
+
     @Before
     public void setUp() {
         numList = new EndlessList<>();
-        strList = new EndlessList<>();
+        numList.addPrev(19);
+        numList.addNext(10);
+        numList.addPrev(15);
+        numList.addNext(13);
     }
 
     /**
@@ -30,11 +32,9 @@ public class EndlessListTest {
      */
     @Test
     public void testAddPrev() {
-        numList.addPrev(9);
-        numList.addPrev(7);
-        numList.addPrev(5);
-        numList.addPrev(3);
-        assertSame(numList.toString(), 7539);
+        numList.addPrev(1);
+        numList.addPrev(2);
+        assertSame(2, numList.getValue());
     }
 
     /**
@@ -42,6 +42,9 @@ public class EndlessListTest {
      */
     @Test
     public void testAddNext() {
+        numList.addNext(1);
+        numList.addNext(2);
+        assertSame(2, numList.getValue());
     }
 
     /**
@@ -60,12 +63,7 @@ public class EndlessListTest {
         numList.addPrev(7);
         numList.addPrev(5);
         numList.addPrev(3);
-        strList.addNext("Hi");
-        strList.addNext("Look!");
-        strList.addNext("Goodnight");
-        strList.addNext("Kool");
-        assertSame(9, numList.getValue()); 
-        assertSame("Kool", strList.getValue()); 
+        assertSame(9, numList.getValue());
     }
 
     /**
@@ -73,6 +71,11 @@ public class EndlessListTest {
      */
     @Test
     public void testSetValue() {
+        numList.setValue(6);
+        assertSame(6, numList.getValue());
+        numList.moveToNext(7);
+        numList.setValue(88);
+        assertSame(88, numList.getValue());
     }
 
     /**
@@ -80,6 +83,10 @@ public class EndlessListTest {
      */
     @Test
     public void testGetPrev() {
+        Integer prev = numList.getPrev();
+        assertSame(prev, numList.getPrev());
+        Integer prev1 = numList.getPrev();
+        assertSame(prev1, numList.getPrev());
     }
 
     /**
@@ -87,6 +94,10 @@ public class EndlessListTest {
      */
     @Test
     public void testGetNext() {
+        Integer next = numList.getNext();
+        assertSame(next, numList.getNext());
+        Integer next1 = numList.getNext();
+        assertSame(next1, numList.getNext());
     }
 
     /**
@@ -94,6 +105,8 @@ public class EndlessListTest {
      */
     @Test
     public void testMoveToNext() {
+        assertSame(true, numList.moveToNext(15));
+        assertSame(false, numList.moveToPrev(99));
     }
 
     /**
@@ -101,6 +114,8 @@ public class EndlessListTest {
      */
     @Test
     public void testMoveToPrev() {
+        assertSame(true, numList.moveToPrev(19));
+        assertSame(false, numList.moveToPrev(99));
     }
 
     /**
@@ -108,6 +123,6 @@ public class EndlessListTest {
      */
     @Test
     public void testIterator() {
+        
     }
-    
 }
